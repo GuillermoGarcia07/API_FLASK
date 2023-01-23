@@ -39,7 +39,9 @@ def createClient():
     db.session.add(client)
     db.session.commit()
 
-    return client_schema.jsonify(client)
+    return jsonify({
+        "message" : "Datos registrados correctamente!!"
+    })
 
 
 @app.route('/clients/<id>', methods=['PUT'])
@@ -56,7 +58,9 @@ def updateClient(id):
 
     db.session.commit()
 
-    return jsonify("Datos Actualizados!!")
+    return jsonify({
+        "message" : "Datos Actualizados!!"
+    })
 
 
 @app.route('/clients/<id>', methods=['DELETE'])
@@ -65,7 +69,9 @@ def deleteClient(id):
     db.session.delete(client)
     db.session.commit()
 
-    return jsonify("Eliminado Correctamenete!!")
+    return jsonify({
+        "message" : "Eliminado correctamenete!!"
+    })
 
 
 @app.route('/clients', methods=['GET'])
@@ -73,15 +79,20 @@ def getClients():
     clients = Client.query.all()
     result = clients_schema.dump(clients)
 
-    return jsonify(result)
+    return jsonify({
+        "data": result
+    })
 
 
 @app.route('/clients/<id>', methods=['GET'])
 def getClient(id):
     client = Client.query.get(id)
 
-    return client_schema.jsonify(client)
-
+    if client:
+        return client_schema.jsonify(client)
+    else:
+        return {'message': 'No existe el cliente'}
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
